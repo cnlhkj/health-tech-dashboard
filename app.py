@@ -5,8 +5,6 @@ from google import genai
 st.set_page_config(page_title="Churn Intervention AI", page_icon="🩺", layout="wide")
 st.title("🩺 Health-Tech Churn Intervention")
 
-api_key = st.sidebar.text_input("Enter your Gemini API Key", type="password")
-
 @st.cache_data
 def load_and_prep_data():
     try:
@@ -96,28 +94,32 @@ if high_risk_df.height > 0:
     )
 
     if st.button(f"Generate Retention Email for {selected_name}"):
-        if not api_key:
-            st.error("Please paste your API key in the sidebar first!")
-        else:
-            user_data = high_risk_df.filter(pl.col("name") == selected_name).row(0, named=True)
+        # Pull the key securely from Streamlit Secrets
+        try:
+            secure_api_key = st.secrets["GEMINI_API_KEY"]
+        except KeyError:
+            st.error("API Key not found! Please add it to Streamlit Secrets.")
+            st.stop()
             
-            with st.spinner(f"Drafting personalized email for {selected_name}..."):
-                client = genai.Client(api_key=api_key)
-                
-                prompt = f"""
-                Act as a Customer Success Manager for a premium health app. 
-                Write a short, friendly, 3-sentence email to {user_data['name']}. 
-                Acknowledge that they are at the '{user_data['Experience_Level']}' level, 
-                but we noticed they are only logging {user_data['Workout_Frequency (days/week)']} days a week.
-                Offer them a free 15-minute consultation to adjust their routine and get back on track.
-                """
-                
-                response = client.models.generate_content(
-                    model='gemini-3.1-flash-lite-preview',
-                    contents=prompt
-                )
-                
-                st.success("Draft Ready for Review!")
-                st.text_area("Review and Edit Draft:", value=response.text, height=200)
+        user_data = high_risk_df.filter(pl.col("name") == selected_name).row(0, named=True)
+            
+        with st.spinner(f"Drafting personalized email for {selected_name}..."):
+            client = genai.Client(api_key=secure_api_key)
+            
+            prompt = f"""
+            Act as a Customer Success Manager for a premium health app. 
+            Write a short, friendly, 3-sentence email to {user_data['name']}. 
+            Acknowledge that they are at the '{user_data['Experience_Level']}' level, 
+            but we noticed they are only logging {user_data['Workout_Frequency (days/week)']} days a week.
+            Offer them a free 15-minute consultation to adjust their routine and get back on track.
+            """
+            
+            response = client.models.generate_content(
+                model='gemini-3.1-flash-lite-preview',
+                contents=prompt
+            )
+            
+            st.success("Draft Ready for Review!")
+            st.text_area("Review and Edit Draft:", value=response.text, height=200)
 else:
     st.success("No users found above this risk threshold! Try lowering the slider.")
