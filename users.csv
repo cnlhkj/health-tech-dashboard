@@ -1,0 +1,5 @@
+user_id,name,days_since_last_log,historical_avg_weekly_logs,churn_probability
+101,Alex Smith,14,4,0.87
+102,Jamie Doe,2,5,0.12
+103,Sam Johnson,21,3,0.95
+104,Jordan Lee,5,4,0.22
