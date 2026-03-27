@@ -2,8 +2,8 @@ import streamlit as st
 import polars as pl
 from google import genai
 
-st.set_page_config(page_title="Churn Intervention AI", page_icon="🩺", layout="wide")
-st.title("🩺 Health-Tech Churn Intervention")
+st.set_page_config(page_title="FitTech Retention Engine", page_icon="🩺", layout="wide")
+st.title("🩺 FitTech Retention Engine: Predictive Churn & AI Outreach")
 
 @st.cache_data
 def load_and_prep_data():

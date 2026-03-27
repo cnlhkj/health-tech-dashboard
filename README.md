@@ -1,6 +1,6 @@
-# 🩺 Health-Tech Churn Intervention Dashboard
+# 🩺 FitTech Retention Engine: Predictive Churn & AI Outreach
 
-[Health-Tech Churn Intervention](https://health-tech-dashboard-hailyu.streamlit.app/)
+[FitTech Retention Engine: Predictive Churn & AI Outreach](https://health-tech-dashboard-hailyu.streamlit.app/)
 
 ## 📌 The Business Problem
 In the highly competitive health and fitness tech space, acquiring a new user is significantly more expensive than retaining an existing one. Traditional analytics dashboards often fail because they are passive—they show who *has* churned, rather than providing actionable tools to intervene *before* it happens.
