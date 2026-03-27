@@ -9,10 +9,9 @@ st.title("🩺 Health-Tech Churn Intervention")
 def load_and_prep_data():
     try:
         pipeline = (
-            pl.scan_csv("gym_data.csv")
+            pl.scan_csv("gym_data_with_names.csv")
             .with_row_index("user_id")
             .with_columns([
-                (pl.lit("Member_") + pl.col("user_id").cast(pl.String)).alias("name"),
                 # FEATURE ENGINEERING 2.0: Continuous Multi-Variate Risk Score
                 # Base risk starts high (1.0). We subtract risk for healthy, continuous behaviors.
                 (
@@ -30,7 +29,7 @@ def load_and_prep_data():
         return pipeline.collect()
     
     except FileNotFoundError:
-        st.error("⚠️ Please drag and drop 'gym_data.csv' into your Codespace first!")
+        st.error("⚠️ Please drag and drop 'gym_data_with_names.csv' into your Codespace first!")
         st.stop()
 
 df = load_and_prep_data()
