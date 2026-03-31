@@ -2,3 +2,4 @@ streamlit
 polars
 google-genai
 faker
+duckdb

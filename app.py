@@ -1,6 +1,8 @@
 import streamlit as st
 import polars as pl
 from google import genai
+from google.genai import types
+import duckdb 
 
 st.set_page_config(page_title="FitTech Retention Engine", page_icon="🩺", layout="wide")
 st.title("🩺 FitTech Retention Engine: Predictive Churn & AI Outreach")
