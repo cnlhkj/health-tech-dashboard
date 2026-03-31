@@ -188,6 +188,8 @@ if st.button("Ask Agent"):
                         name=call.name,
                         response={"result": raw_result}
                     )
+                    time.sleep(15)
+
                     response = chat.send_message(tool_part)
             
             status.update(label="Answer Ready!", state="complete", expanded=False)
