@@ -122,3 +122,73 @@ if high_risk_df.height > 0:
             st.text_area("Review and Edit Draft:", value=response.text, height=200)
 else:
     st.success("No users found above this risk threshold! Try lowering the slider.")
+
+
+st.divider()
+
+# ==========================================
+# 🤖 NEW: Agentic Data Co-Pilot
+# ==========================================
+st.markdown("### 🤖 Chat with your Data (Agentic AI)")
+st.write("Ask any plain-English question. The AI will autonomously write and execute SQL against the live dataset to find your answer!")
+
+user_question = st.text_input("Example: What is the average churn probability of users under 30?")
+
+if st.button("Ask Agent"):
+    if not user_question:
+        st.warning("Please type a question first.")
+    else:
+        try:
+            secure_api_key = st.secrets["GEMINI_API_KEY"]
+        except KeyError:
+            st.error("API Key not found!")
+            st.stop()
+
+        # 1. Define the Tool (DuckDB querying the Polars 'df' directly!)
+        def run_sql_query(query: str) -> str:
+            try:
+                # DuckDB automatically finds the 'df' variable in memory
+                result = duckdb.sql(query).fetchall()
+                return str(result)
+            except Exception as e:
+                return f"SQL Error: {str(e)}"
+
+        # 2. Configure the Agent
+        client = genai.Client(api_key=secure_api_key)
+        chat = client.chats.create(
+            model='gemini-3-flash-preview',
+            config=types.GenerateContentConfig(
+                tools=[run_sql_query],
+                system_instruction="""
+                You are an autonomous data analyst. You can query data directly from the table called 'df'.
+                The columns are: user_id, name, Age, Gender, Workout_Frequency (days/week), Experience_Level, Calories_Burned, churn_probability, and days_since_last_log.
+                Always use the run_sql_query tool to write SQLite/DuckDB queries to find exact answers before responding.
+                """
+            )
+        )
+
+        # 3. The Visual Agent Loop
+        # st.status creates a cool expandable box so the user can watch the AI "think"
+        with st.status("Agent is thinking...", expanded=True) as status:
+            st.write("🧠 Analyzing intent...")
+            response = chat.send_message(user_question)
+            
+            if response.function_calls:
+                for call in response.function_calls:
+                    sql_code = call.args.get('query', 'No query extracted')
+                    st.write(f"✍️ **Writing SQL:** `{sql_code}`")
+                    
+                    raw_result = run_sql_query(sql_code)
+                    st.write(f"✅ **Database Result:** `{raw_result}`")
+                    
+                    st.write("💬 Formatting final answer...")
+                    tool_part = types.Part.from_function_response(
+                        name=call.name,
+                        response={"result": raw_result}
+                    )
+                    response = chat.send_message(tool_part)
+            
+            status.update(label="Answer Ready!", state="complete", expanded=False)
+
+        # Display the final AI response
+        st.info(response.text)
