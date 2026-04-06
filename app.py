@@ -158,7 +158,7 @@ if st.button("Ask Agent"):
         # 2. Configure the Agent
         client = genai.Client(api_key=secure_api_key)
         chat = client.chats.create(
-            model='gemini-3.1-pro-preview',
+            model='gemini-3-flash-preview',
             config=types.GenerateContentConfig(
                 tools=[run_sql_query],
                 system_instruction="""
