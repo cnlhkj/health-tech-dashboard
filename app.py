@@ -116,7 +116,7 @@ if high_risk_df.height > 0:
             """
             
             response = client.models.generate_content(
-                model='gemini-3.1-flash-lite-preview',
+                model='gemini-3.1-pro-preview',
                 contents=prompt
             )
             
@@ -158,7 +158,7 @@ if st.button("Ask Agent"):
         # 2. Configure the Agent
         client = genai.Client(api_key=secure_api_key)
         chat = client.chats.create(
-            model='gemini-3-flash-preview',
+            model='gemini-3.1-pro-preview',
             config=types.GenerateContentConfig(
                 tools=[run_sql_query],
                 system_instruction="""
@@ -188,7 +188,7 @@ if st.button("Ask Agent"):
                         name=call.name,
                         response={"result": raw_result}
                     )
-                    time.sleep(15)
+                    time.sleep(5)
 
                     response = chat.send_message(tool_part)
             
