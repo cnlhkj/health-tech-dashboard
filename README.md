@@ -11,7 +11,7 @@ This application bridges the gap between predictive analytics and customer succe
 ### Key Features:
 * **Continuous Risk Scoring:** Moves beyond simple binary thresholds by using a multi-variate heuristic formula (incorporating workout frequency, session duration, age, and caloric burn) to assign a precise risk probability to every user.
 * **Dynamic Stakeholder Controls:** Includes interactive UI elements (like risk threshold sliders) allowing Product Managers and Customer Success teams to filter cohorts based on current intervention budgets and bandwidth.
-* **Generative Action (AI Integration):** Connects to the **Gemini 3.1 Flash Lite** model via API to auto-draft personalized, context-aware retention emails based on the specific user's behavioral drop-off.
+* **Generative Action (AI Integration):** Connects to the **Gemini 3.5 Flash** model via API to auto-draft personalized, context-aware retention emails based on the specific user's behavioral drop-off.
 
 ## 🛠️ Technical Architecture & Engineering Choices
 
